@@ -6,61 +6,65 @@ class R530 < Server
   cpu_sockets 2, :haswell
 end
 
-#class R920 < Server
-#  memory_slots 32, :ddr3
-#  cpu_sockets 4, :ivybridge
-#end
-#
-#class E5_4650 < CPU
-#  def initialize
-#    super 2100, 12, :haswell
-#  end
-#end
-#
-#class E5_4660 < CPU
-#  def initialize
-#    super 2100, 14, :haswell
-#  end
-#end
-#
-#class E5_2620 < CPU
-#  def initialize
-#    super 2100, 6, :ivybridge
-#  end
-#end
-#
-#class DDR3_16 < Memory
-#  def initialize
-#    super :ddr3, 16
-#  end
-#end
-#
-#class DDR4_16 < Memory
-#  def initialize
-#    super :ddr4, 16
-#  end
-#end
+class R920 < Server
+  memory_slots 32, :ddr3
+  cpu_sockets 4, :ivybridge
+end
 
-#class ClassesPt2Test < MiniTest::Test
+class E5_4650 < CPU
+  def initialize
+    super 2100, 12, :haswell
+  end
+end
+#E5_4650_obj=E5_4650.new
+#puts "generation: #{E5_4650_obj.generation}"
 #
-#  def assert_raises_with_message(clazz, message, &block)
-#    err = assert_raises(clazz, &block)
-#    assert_equal message, err.message
-#  end
-#
-#  def assert_invalid_configuration(message, &block)
-#    assert_raises_with_message(InvalidConfiguration, message, &block)
-#  end
-#
-#  def test_too_much_cpu
-#    assert_invalid_configuration 'No more sockets left' do
-#      server = R530.new
-#      server.cpu << E5_4650.new
-#      server.cpu << E5_4650.new
-#      server.cpu << E5_4650.new # third CPU!!!
-#    end
-#  end
-#
+class E5_4660 < CPU
+  def initialize
+    super 2100, 14, :haswell
+  end
+end
+
+class E5_2620 < CPU
+  def initialize
+    super 2100, 6, :ivybridge
+  end
+end
+
+class DDR3_16 < Memory
+  def initialize
+    super :ddr3, 16
+  end
+end
+
+class DDR4_16 < Memory
+  def initialize
+    super :ddr4, 16
+  end
+end
+
+class ClassesPt2Test < MiniTest::Test
+  InvalidConfiguration = "Invalid Configuration"
+
+  def assert_raises_with_message(clazz, message, &block)
+    err = assert_raises(clazz, &block)
+    assert_equal message, err.message
+  end
+
+  def assert_invalid_configuration(message, &block)
+    assert_raises_with_message(InvalidConfiguration, message, &block)
+  end
+
+  def test_too_much_cpu
+    assert_invalid_configuration 'No more sockets left' do
+      server = R530.new
+      server.cpu << E5_4650.new
+      server.cpu << E5_4650.new
+      puts server.cpu
+      server.cpu << E5_4650.new # third CPU!!!
+    end
+  end
+
 #  def test_invalid_cpu_type
 #    assert_invalid_configuration 'Unsupported CPU type' do
 #      server = R530.new
@@ -116,4 +120,4 @@ end
 #
 #    assert_equal 512, server.memory_size
 #  end
-#end
+end

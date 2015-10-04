@@ -2,8 +2,9 @@
 #vim:ts=4:sw=4:et:
 class CPU
     attr_accessor :smth, :hz, :cores,:generation
-    def initialize(smth, hz, cores, generation)
-        @smth = smth
+    #def initialize(smth, hz, cores, generation)
+    def initialize(hz, cores, generation)
+        #@smth = smth
         @hz = hz
         @cores = cores
         @generation = generation
@@ -36,15 +37,18 @@ class Memory
 end
 
 class Server
+    @memory_banks_max = 0
+    @cpu_slots_max = 0
     def initialize()
-        @cpu_slots_max = 2
+        #@cpu_slots_max = 2
         @cpu_slots = [] #array of CPU class objects
-        @memory_banks_max = 16
+        @cpu = @cpu_slots
+        #@memory_banks_max = 16
         @memory_banks = []  #this is crappy, fucking crappy definition of array without elements type like Array(Memory)
                             #making the reader guess what the hell going to be inside the array
                             #so, making it clear with comment - this gonna hold Memory class objects
         @supported_cpu_generation = 3
-        @supported_memory_type = :ddr4
+        #@supported_memory_type = :ddr4
     end
 
     #memory part
@@ -80,7 +84,8 @@ class Server
             raise "unsupported CPU generation #{cpu.generation}"
         end
         if cpus_count + 1 > @cpu_slots_max then
-            raise "too much CPUs for this server type (max is #{@cpu_slots_max}"
+            #raise "too much CPUs for this server type (max is #{@cpu_slots_max}"
+            raise 'No more sockets left'
         end
         @cpu_slots.each do | c |
             if c == cpu then
@@ -91,6 +96,16 @@ class Server
         end
         @cpu_slots.push(cpu)
     end
+    def cpu=(cpu)
+        raise "shit1"
+        #puts "blabla - writer"
+    end
+    def cpu
+        return @cpu_slots
+    end
+#    def push(cpu)
+#      puts cpu
+#    end
 
     def cpus_count
         count=0
@@ -102,5 +117,23 @@ class Server
     def bootable?
         bootable = memory_size > 0 && cpus_count > 0
         return bootable
+    end
+    class << self #voodoo maaaagiiick
+      attr_accessor :cpu_type
+      attr_accessor :cpu_slots_max
+      attr_accessor :supported_memory_type
+      attr_accessor :memory_banks_max
+    end
+    #attr_accessor :cpu
+    
+    def self.memory_slots(number,type)
+      @memory_banks_max = number
+      @supported_memory_type = type
+    end
+
+    #cpu
+    def self.cpu_sockets(number,type)
+      @cpu_slots_max = number
+      @cpu_type = type
     end
 end
